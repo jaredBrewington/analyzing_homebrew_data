@@ -5,5 +5,5 @@
 .ipynb_checkpoints
 
 # json file
-*.json
+#*.json
 

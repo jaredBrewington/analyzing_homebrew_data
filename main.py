@@ -28,18 +28,16 @@ pprint(packages_desc[:5])
 # print(info_str)
 
 
-def get_package_information(index=0):
+def get_package_information(index):
     """
-    Function to get the package's analytics for past 30, 90 and 365 days.
+    Function to get the packages' analytics for past 30, 90 and 365 days.
 
     Arguments:
     ==========
     :param index: (int) Index of the package whose information is to be retrieved.
     :return: (dict) Package information containing the package name, description and installation count.
     """
-
     package_url = f"https://formulae.brew.sh/api/formula/{packages_name[index]}.json"
-
     # make API requests
     r = requests.get(package_url)
 
@@ -70,23 +68,20 @@ def get_package_information(index=0):
     time.sleep(r.elapsed.total_seconds())
     print("Got {0} in {1} seconds.".format(
         packages_name[index], r.elapsed.total_seconds()))
-
     return data_dict
 
 
-# package_1 = get_package_information(0)
-# print(package_1)
+t1 = time.perf_counter()
+results = list()
+for i in range(len(packages_name)):
+    if packages_name[i] == 'carina':
+        continue
+    else:
+        analysis_data = get_package_information(i)
+    results.append(analysis_data)
+t2 = time.perf_counter()
 
 with open("package_info.json", "w") as f:
-    t1 = time.perf_counter()
-    analytics_data = list()
-    for i in range(len(packages_name)):
-        if packages_name[i] == 'carina':
-            continue
-        else:
-            info_dict = get_package_information(i)
-            analytics_data.append(info_dict)
-            json.dump(analytics_data, f, indent=2)
-    t2 = time.perf_counter()
-    print("Finished in {} seconds.".format(t2 - t1))
+    json.dump(results, f, indent=2)
+print("Finished in {} seconds.".format(t2 - t1))
 print("done...!!")
