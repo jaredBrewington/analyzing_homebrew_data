@@ -1,0 +1,9 @@
+# vscode meta data
+.vscode
+
+# jupyter notebooks checkpoints
+.ipynb_checkpoints
+
+# json file
+*.json
+
