@@ -5,11 +5,11 @@ import requests
 def get_requests(url):
     response = requests.get(url)
     if not response.ok:
-        print(response.status_code)
+        print(f'Error: {url} returned status code {response.status_code})
         exit()
     return response
 
-startTime = time.perf_counter()
+start_time = time.perf_counter()
 
 # make api request to Homebrew formula info
 url = 'https://formulae.brew.sh/api/formula.json'
@@ -20,9 +20,9 @@ results = list()
 
 for package in packages_json:
 
-    packageName = package['name']
+    package_name = package['name']
     # get url for individual package
-    package_url = f'https://formulae.brew.sh/api/formula/{packageName}.json'
+    package_url = f'https://formulae.brew.sh/api/formula/{package_name}.json'
 
     # request data for a package
     response = get_requests(package_url)
@@ -47,11 +47,12 @@ for package in packages_json:
     results.append(data)
     time.sleep(response.elapsed.total_seconds())
 
-    print(f'{packageName} in {response.elapsed.total_seconds()} seconds')
+    print(f'{package_name} in {response.elapsed.total_seconds()} seconds')
 
-endTime = time.perf_counter()
+end_time = time.perf_counter()
 
-with open('homebrewAnalytics.json', 'w') as fOut:
+with open('homebrew_analytics.json', 'w') as fOut:
     json.dump(results, fOut, indent=4)
 
-print(f'Finished...Total time was {(endTime-startTime)} seconds for {len(packages_json)} packages')
+print('\nFinished...')
+print(f'Total time was {(end_time-start_time)/60} minutes for {len(packages_json)} packages')
